@@ -8,18 +8,25 @@
 
 [Setup MacOS](INSTALL-MACOS.md)
 
-## Install Istio
+## Setup new kubernetes cluster
 
 ```shell
 # Connect to the cluster
 podman machine start
+
+# install ...
+kind create cluster --name istio-playground
+# ... or just start
 podman start istio-payground-control-plane
 
-podman port istio-payground-control-plane
-# 6443/tcp -> 127.0.0.1:51465
+# check connectivity
+kubectl cluster-info --context kind-istio-playground
+
+podman port istio-playground-control-plane
+# 6443/tcp -> 127.0.0.1:49507
 
 kind get clusters
-kubectl config use-context kind-istio-payground
+kubectl config use-context kind-istio-playground
 kubectl cluster-info
 
 

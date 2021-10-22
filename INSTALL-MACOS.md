@@ -56,8 +56,4 @@ exit
 brew install kubectl@1.22.2
 brew install kind@0.11.1
 
-# test
-kind create cluster --name istio-payground
-
-kubectl cluster-info --context kind-istio-payground
 ```
