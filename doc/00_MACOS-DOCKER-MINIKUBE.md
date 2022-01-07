@@ -1,20 +1,24 @@
 # MacOS: Install Podman & KinD
 
 ## Pre Prerequisites
-[Common tools](MACOS-COMMON-TOOLS.md)
+[Common tools](00_MACOS-COMMON-TOOLS.md)
 
-https://www.cprime.com/resources/blog/docker-on-mac-with-homebrew-a-step-by-step-tutorial/
+*Docker*: https://www.cprime.com/resources/blog/docker-on-mac-with-homebrew-a-step-by-step-tutorial/
+
+*Minikube*: https://minikube.sigs.k8s.io/docs/start/
 
 ```shell
 brew cask install docker
-brew install kind@0.11.1
+brew install minikube@1.23.2
 
 ```
 
 ## Kind
 ```shell
-# install ...
-kind create cluster --name istio-playground
+
+minikube config set driver docker
+
+minikube start --memory=16384 --cpus=4 --kubernetes-version=v1.20.2 --profile istio-playground
 # ... or just start
 docker start istio-payground-control-plane
 
@@ -22,7 +26,7 @@ docker start istio-payground-control-plane
 kubectl cluster-info --context kind-istio-playground
 
 docker port istio-playground-control-plane
-# 6443/tcp -> 127.0.0.1:49507
+# 6443/tcp -> 127.0.0.1:49507_
 
 kind get clusters
 kubectl config use-context kind-istio-playground

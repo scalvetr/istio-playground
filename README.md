@@ -1,56 +1,34 @@
 # Istio playground
 
 ## Prerequisites
-You need a kubernetes cluster
 
-[MacOS: Install Podman Kind](MACOS-PODMAN-KIND.md)
-[MacOS: Install Docker and Minikube](MACOS-DOCKER-MINIKUBE.md)
+### 1.- kubectl & helm
 
-## Install Istio
+In case you don't have these tools:
 
-https://istio.io/latest/docs/setup/platform-setup/kind/
+[Install kubectl and Helm](doc/00_MACOS-COMMON-TOOLS.md)
 
-Install a UI
-```shell
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.1.0/aio/deploy/recommended.yaml
-# verify the dashboard is installed
-kubectl get pod -n kubernetes-dashboard
-# Create a ClusterRoleBinding to provide admin access to the newly created cluster.
-kubectl create clusterrolebinding default-admin --clusterrole cluster-admin --serviceaccount=default:default
+### 2.- A Kubernetes cluster
 
-# To login to Dashboard, you need a Bearer Token. Use the following command to store the token in a variable.
-token=$(kubectl get secrets -o jsonpath="{.items[?(@.metadata.annotations['kubernetes\.io/service-account\.name']=='default')].data.token}"|base64 --decode)
+In cse you don't have acces to a cluster to test, you have these options to install it locally:
+* KinD (Docker): [MacOS: Install Docker Kind](doc/00_MACOS-DOCKER-KIND.md)
+* KinD (Podman): [MacOS: Install Podman Kind](doc/00_MACOS-PODMAN-KIND.md)
+* Minikube: [MacOS: Install Docker and Minikube](doc/00_MACOS-DOCKER-MINIKUBE.md)
 
-```
+### 3.- Istio
 
-[Click to see the UI](http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/)
+To install Istio on an existing cluster: [Install Istio](doc/01_INSTALL_ISTIO.md)
 
-Install 
 
-See: https://istio.io/latest/docs/setup/install/helm/
+## Istio Sample Application
 
-See: https://istio.io/latest/docs/setup/getting-started/#download
+[Install Istio Sample Application](doc/02_INSTALL_BOOKINFO_APPLICATION.md)
 
-Download
-```shell
-mkdir workdir
-cd workdir
-curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.11.4 sh -
-cd istio-1.11.4
-```
+Check access
 
-Install
-```shell
-kubectl create namespace istio-system
-helm install istio-base manifests/charts/base -n istio-system
-helm install istiod manifests/charts/istio-control/istio-discovery \
-    -n istio-system
+![Bookinfo Landing Page](doc/img/bookinfo-landing-page.png)
 
-# (Optional) Install the Istio ingress gateway chart which contains the ingress gateway components:
-helm install istio-ingress manifests/charts/gateways/istio-ingress \
-    -n istio-system
+View the istio dashboard
 
-# (Optional) Install the Istio egress gateway chart which contains the egress gateway components:
-helm install istio-egress manifests/charts/gateways/istio-egress \
-    -n istio-system
-```
+![Bookinfo Istio Dashboard](doc/img/bookinfo-istio-dashboard.png)
+

@@ -1,7 +1,7 @@
 # MacOS: Install Podman & KinD
 
 ## Pre Prerequisites
-[Common tools](MACOS-COMMON-TOOLS.md)
+[Common tools](00_MACOS-COMMON-TOOLS.md)
 
 ```shell
 brew install podman@3.4.0
