@@ -89,4 +89,10 @@ rm test.sh
 istioctl dashboard kiali
 ```
 
+Apply default destination rules
 
+
+See: https://github.com/istio/istio/blob/master/samples/bookinfo/networking/destination-rule-all.yaml
+
+```shell
+kubectl apply -f samples/bookinfo/networking/destination-rule-all.yaml

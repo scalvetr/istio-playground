@@ -32,3 +32,39 @@ View the istio dashboard
 
 ![Bookinfo Istio Dashboard](doc/img/bookinfo-istio-dashboard.png)
 
+## Tasks
+
+### Request routing
+https://istio.io/latest/docs/tasks/traffic-management/request-routing/
+
+
+```shell
+# all virtual services pointing to subset: v1
+kubectl apply -f samples/bookinfo/networking/virtual-service-all-v1.yaml
+kubectl get virtualservices -o yaml
+kubectl get destinationrules -o yaml
+
+# end-user=jason points to reviews: vs
+kubectl apply -f samples/bookinfo/networking/virtual-service-reviews-test-v2.yaml
+kubectl get virtualservice reviews -o yaml
+```
+
+Config:
+```yaml
+  http:
+  - match:
+    - headers:
+        end-user:
+          exact: jason
+    route:
+    - destination:
+        host: reviews
+        subset: v2
+  - route:
+    - destination:
+        host: reviews
+        subset: v1
+```
+
+See: https://github.com/istio/istio/blob/master/samples/bookinfo/networking/virtual-service-all-v1.yaml
+See: https://github.com/istio/istio/blob/master/samples/bookinfo/networking/virtual-service-reviews-test-v2.yaml
