@@ -1,5 +1,7 @@
 # Install the sample application
 
+## Prepare the namespace
+
 https://istio.io/latest/docs/setup/getting-started/#bookinfo
 To run in a different namespace (for example istio-demo)
 ```shell
@@ -20,8 +22,9 @@ kubectl label namespace default istio-injection-
 kubectl get namespaces default -o yaml
 ```
 
-Deploy the sample application
+## Deploy the sample application
 
+See: https://istio.io/latest/docs/examples/bookinfo/
 See: https://github.com/istio/istio/blob/master/samples/bookinfo/platform/kube/bookinfo.yaml
 
 ```shell
@@ -35,7 +38,12 @@ kubectl get pods
 kubectl exec "$(kubectl get pod -l app=ratings -o jsonpath='{.items[0].metadata.name}')" -c ratings -- curl -sS productpage:9080/productpage | grep -o "<title>.*</title>"
 ```
 
-Open the application to outside traffic
+See: https://istio.io/latest/docs/examples/bookinfo/
+
+![Bookinfo Application without Istio](diagrams/bookinfo_without_istio.png)
+
+
+## Open the application to outside traffic
 
 See: https://github.com/istio/istio/blob/master/samples/bookinfo/networking/bookinfo-gateway.yaml
 
@@ -46,6 +54,55 @@ kubectl apply -f samples/bookinfo/networking/bookinfo-gateway.yaml
 # Ensure that there are no issues with the configuration:
 istioctl analyze
 ```
+
+Create the `ingressgateway` and a `VirtualService` pointing to `productpage`
+
+![Bookinfo Application Bookinfo Virtual Service](diagrams/bookinfo_bookinfo_vs.png)
+
+```yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: bookinfo-gateway
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: bookinfo
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - bookinfo-gateway
+  http:
+  - match:
+    - uri:
+        exact: /productpage
+    - uri:
+        prefix: /static
+    - uri:
+        exact: /login
+    - uri:
+        exact: /logout
+    - uri:
+        prefix: /api/v1/products
+    route:
+    - destination:
+        host: productpage
+        port:
+          number: 9080
+```
+
 
 Determining the ingress IP and ports
 
@@ -89,7 +146,9 @@ rm test.sh
 istioctl dashboard kiali
 ```
 
-Apply default destination rules
+
+
+## Apply default destination rules
 
 
 See: https://github.com/istio/istio/blob/master/samples/bookinfo/networking/destination-rule-all.yaml

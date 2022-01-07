@@ -1,12 +1,5 @@
 # Install Istio
 
-## Prerequisites
-You need a kubernetes cluster
-
-[MacOS: Install Docker Kind](00_MACOS-DOCKER-KIND.md)
-[MacOS: Install Podman Kind](00_MACOS-PODMAN-KIND.md)
-[MacOS: Install Docker and Minikube](00_MACOS-DOCKER-MINIKUBE.md)
-
 ## Download Istio
 See: https://istio.io/latest/docs/setup/getting-started/#download
 

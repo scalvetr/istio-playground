@@ -1,0 +1,33 @@
+@startuml
+'https://plantuml.com/component-diagram
+
+actor user as "User"
+
+node productpage {
+component productpage_v1 as "productpage V1"
+}
+node reviews {
+component reviews_v1 as "reviews V1"
+component reviews_v2 as "reviews V2"
+component reviews_v3 as "reviews V3"
+}
+node details {
+component details_v1 as "details V1"
+}
+node ratings {
+component ratings_v1 as "ratings V1"
+}
+
+reviews_v1 --[hidden]d-> reviews_v2
+reviews_v2 --[hidden]d-> reviews_v3
+
+user -> productpage_v1
+productpage_v1 -> reviews_v1
+productpage_v1 -> reviews_v2
+productpage_v1 -> reviews_v3
+productpage_v1 -> details_v1
+reviews_v2 -> ratings_v1
+reviews_v3 -> ratings_v1
+
+
+@enduml
