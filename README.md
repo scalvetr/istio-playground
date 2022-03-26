@@ -17,7 +17,7 @@ In cse you don't have acces to a cluster to test, you have these options to inst
 
 ### 3.- Istio
 
-To install Istio on an existing cluster: [Install Istio](doc/01_INSTALL_ISTIO.md)
+To install Istio on an existing cluster: [Install Istio](doc/01_INSTALL_ISTIO_HELM.md)
 
 
 ## Istio Sample Application
