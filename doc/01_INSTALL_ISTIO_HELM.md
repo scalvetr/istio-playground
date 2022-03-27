@@ -74,14 +74,14 @@ kubectl -n istio-ingress patch svc istio-ingress --patch \
 Verify
 ```shell
 # deploy and expose sample service
-kubectl create namespace istio-test
-kubectl label namespace istio-test istio-injection=enabled
-kubectl config set-context --current --namespace=istio-test
-kubectl apply -f istio-test.yaml
+kubectl create namespace demo-app
+kubectl label namespace demo-app istio-injection=enabled
 
-curl -vv "http://localhost/echo-service"
+kubectl apply -f https://raw.githubusercontent.com/scalvetr/istio-playground/main/istio-test.yaml
+
+curl -vv "http://localhost/demo-app"
 # HTTP/1.1 200 OK
 
-kubectl namespace istio-test
-kubectl delete -f istio-test.yaml
+kubectl delete -f https://raw.githubusercontent.com/scalvetr/istio-playground/main/istio-test.yaml
+kubectl delete namespace demo-app
 ```
