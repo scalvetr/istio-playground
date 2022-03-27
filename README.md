@@ -21,7 +21,7 @@ To install Istio on an existing cluster:
 * [Install Istio with Helm](doc/01_INSTALL_ISTIO_HELM.md)
 * [Install Istio with Istioctl](doc/01_INSTALL_ISTIO_ISTIOCTL.md)
 
-### 4.- Istio
+### 4.- Install addons
 
 Next step is to install the following addons:
 * Prometheus
@@ -29,7 +29,7 @@ Next step is to install the following addons:
 * Jaeger
 * Kiali
 
-* [Install Addons](doc/02_INSTALL_ADDONS.md)
+You can follow the instructions [here](doc/02_INSTALL_ADDONS.md)
 
 ## Istio Sample Application
 
