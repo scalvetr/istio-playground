@@ -52,7 +52,7 @@ kubectl cluster-info
 
 Install a UI
 ```shell
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.1.0/aio/deploy/recommended.yaml
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml
 # verify the dashboard is installed
 kubectl get pod -n kubernetes-dashboard
 # Create a ClusterRoleBinding to provide admin access to the newly created cluster.
@@ -62,6 +62,14 @@ kubectl create clusterrolebinding default-admin --clusterrole cluster-admin --se
 token=$(kubectl get secrets -o jsonpath="{.items[?(@.metadata.annotations['kubernetes\.io/service-account\.name']=='default')].data.token}"|base64 --decode)
 echo $token
 ```
+
+You can enable access to the Dashboard using the kubectl command-line tool, by running the following command:
+```shell
+kubectl proxy
+```
+
+Kubectl will make Dashboard available at 
+[http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/.](http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/.)
 
 Uninstall
 ```shell
