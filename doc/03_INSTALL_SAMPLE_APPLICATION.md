@@ -3,11 +3,11 @@
 ## Prepare the namespace
 
 https://istio.io/latest/docs/setup/getting-started/#bookinfo
-To run in a different namespace (for example istio-demo)
+To run in a different namespace (for example bookinfo)
 ```shell
-kubectl create namespace istio-demo
-kubectl label namespace istio-demo istio-injection=enabled
-kubectl config set-context --current --namespace=istio-demo
+kubectl create namespace bookinfo
+kubectl label namespace bookinfo istio-injection=enabled
+kubectl config set-context --current --namespace=bookinfo
 ```
 
 Otherwise, just label the default:
@@ -25,9 +25,9 @@ kubectl get namespaces default -o yaml
 ## Deploy the sample application
 
 See: https://istio.io/latest/docs/examples/bookinfo/
-See: https://github.com/istio/istio/blob/master/samples/bookinfo/platform/kube/bookinfo.yaml
 
 ```shell
+# See: https://raw.githubusercontent.com/istio/istio/1.13.2/samples/bookinfo/platform/kube/bookinfo.yaml
 kubectl apply -f samples/bookinfo/platform/kube/bookinfo.yaml
 
 # check services and pods are being deployed
@@ -38,31 +38,22 @@ kubectl get pods
 kubectl exec "$(kubectl get pod -l app=ratings -o jsonpath='{.items[0].metadata.name}')" -c ratings -- curl -sS productpage:9080/productpage | grep -o "<title>.*</title>"
 ```
 
-See: https://istio.io/latest/docs/examples/bookinfo/
-
 ![Bookinfo Application without Istio](diagrams/bookinfo_without_istio.png)
-
 
 ## Open the application to outside traffic
 
-See: https://github.com/istio/istio/blob/master/samples/bookinfo/networking/bookinfo-gateway.yaml
-
-```shell
-#Associate this application with the Istio gateway:
-kubectl apply -f samples/bookinfo/networking/bookinfo-gateway.yaml
-
-# Ensure that there are no issues with the configuration:
-istioctl analyze
-```
-
-Create the `ingressgateway` and a `VirtualService` pointing to `productpage`
+Create the `Gateway` and a `VirtualService` pointing to `productpage`
 
 ![Bookinfo Application Bookinfo Virtual Service](diagrams/bookinfo_bookinfo_vs.png)
 
-```yaml
+
+```shell
+# See: https://raw.githubusercontent.com/istio/istio/1.13.2/samples/bookinfo/networking/bookinfo-gateway.yaml
+cat <<EOF | kubectl apply -f -
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
+  namespace: istio-ingress
   name: bookinfo-gateway
 spec:
   selector:
@@ -78,6 +69,7 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
+  namespace: bookinfo
   name: bookinfo
 spec:
   hosts:
@@ -101,8 +93,13 @@ spec:
         host: productpage
         port:
           number: 9080
+EOF 
+
+# Ensure that there are no issues with the configuration:
+istioctl analyze
 ```
 
+## Test
 
 Determining the ingress IP and ports
 
@@ -110,8 +107,8 @@ See: https://istio.io/latest/docs/setup/getting-started/#determining-the-ingress
 
 For minikube th commands are different:
 ```shell
-export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].nodePort}')
-export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="https")].nodePort}')
+export INGRESS_PORT=$(kubectl -n istio-ingress get service istio-ingress -o jsonpath='{.spec.ports[?(@.name=="http2")].nodePort}')
+export SECURE_INGRESS_PORT=$(kubectl -n istio-ingress get service istio-ingress -o jsonpath='{.spec.ports[?(@.name=="https")].nodePort}')
 echo "INGRESS_PORT=$INGRESS_PORT" # should be 30080
 echo "SECURE_INGRESS_PORT=$SECURE_INGRESS_PORT" # should be 300443
 
@@ -141,16 +138,13 @@ EOF
 chmod a+x test.sh
 ./test.sh
 rm test.sh
-
-# open kiali dashboard
-istioctl dashboard kiali
 ```
 
 
 
 ## Apply default destination rules
 
-See: https://github.com/istio/istio/blob/master/samples/bookinfo/networking/destination-rule-all.yaml
+See: https://raw.githubusercontent.com/istio/istio/1.13.2/samples/bookinfo/networking/destination-rule-all.yaml
 
 ```shell
 kubectl apply -f samples/bookinfo/networking/destination-rule-all.yaml

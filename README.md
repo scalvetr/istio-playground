@@ -17,12 +17,23 @@ In cse you don't have acces to a cluster to test, you have these options to inst
 
 ### 3.- Istio
 
-To install Istio on an existing cluster: [Install Istio](doc/01_INSTALL_ISTIO_HELM.md)
+To install Istio on an existing cluster:
+* [Install Istio with Helm](doc/01_INSTALL_ISTIO_HELM.md)
+* [Install Istio with Istioctl](doc/01_INSTALL_ISTIO_ISTIOCTL.md)
 
+### 4.- Istio
+
+Next step is to install the following addons:
+* Prometheus
+* Grafana
+* Jaeger
+* Kiali
+
+* [Install Addons](doc/02_INSTALL_ADDONS.md)
 
 ## Istio Sample Application
 
-[Install Istio Sample Application](doc/02_INSTALL_BOOKINFO_APPLICATION.md)
+[Install Istio Sample Application](doc/03_INSTALL_SAMPLE_APPLICATION.md)
 
 Check access
 

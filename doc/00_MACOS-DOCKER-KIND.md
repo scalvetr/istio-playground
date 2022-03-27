@@ -7,7 +7,7 @@ https://www.cprime.com/resources/blog/docker-on-mac-with-homebrew-a-step-by-step
 
 ```shell
 brew cask install docker
-brew install kind@0.11.1
+brew install kind@v0.12.0
 
 ```
 
@@ -17,19 +17,18 @@ https://istio.io/latest/docs/setup/platform-setup/kind/
 
 ```shell
 # install ...
-export CLUSTER_NAME="istio-playground";
-cat <<EOF | kind create cluster --name ${CLUSTER_NAME} --config=-
+cat <<EOF | kind create cluster --name istio-playground --wait 5m --config=-
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
 - role: control-plane
   extraPortMappings:
   - containerPort: 30080
-    hostPort: 8080
+    hostPort: 80
     listenAddress: "0.0.0.0" # Optional, defaults to "0.0.0.0"
     protocol: TCP
   - containerPort: 30443
-    hostPort: 8443
+    hostPort: 443
     listenAddress: "0.0.0.0" # Optional, defaults to "0.0.0.0"
     protocol: TCP
 EOF
@@ -41,8 +40,8 @@ kubectl cluster-info --context kind-istio-playground
 
 docker port istio-playground-control-plane
 # 6443/tcp -> 127.0.0.1:53526
-# 30443/tcp -> 0.0.0.0:8443
-# 30080/tcp -> 0.0.0.0:8080
+# 30443/tcp -> 0.0.0.0:443
+# 30080/tcp -> 0.0.0.0:80
 
 kind get clusters
 kubectl config use-context kind-istio-playground

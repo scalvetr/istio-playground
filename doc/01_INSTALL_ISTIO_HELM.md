@@ -25,11 +25,9 @@ helm install istiod istio/istiod --version 1.13.2 -n istio-system --wait
 # https://github.com/istio/istio/blob/master/manifests/charts/gateway/templates/service.yaml#L41
 # https://github.com/istio/istio/blob/master/manifests/charts/gateway/values.yaml#L43
 helm install istio-ingress istio/gateway --version 1.13.2 -n istio-ingress --wait --set service.type=NodePort
-  
-helm --debug install istio-ingress istio/gateway --version 1.13.2 -n istio-ingress --wait --set service.type=NodePort
-  
 
-helm show values istio/base
+# helm --debug install istio-ingress istio/gateway --version 1.13.2 -n istio-ingress --wait --set service.type=NodePort
+# helm show values istio/base
 
 
 helm status istio-base -n istio-system
@@ -53,7 +51,7 @@ Expose istio-ingress
 # patch the service
 # KinD only:
 # path istio-ingressgateway to use the ports we've mapped as extraPortMappings in the cluster creation
-kubectl -n istio-system patch svc istio-ingress --patch \
+kubectl -n istio-ingress patch svc istio-ingress --patch \
   '{"spec": { "ports": [ { "port": 80, "nodePort": 30080 }, { "port": 443, "nodePort": 30443 } ] } }'
   
 ```
@@ -68,8 +66,4 @@ kubectl apply -f istio-test.yaml
 
 curl -vv "http://localhost/echo-service"
 # HTTP/1.1 200 OK
-
-# clean up resources
-kubectl delete -f istio-test.yaml
-kubectl delete namespace istio-test
 ```
